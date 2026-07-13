@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["src/app/app.css"],
-  "sourcesContent": [".nav-link-calendario {\n  color: var(--tc-muted);\n  text-decoration: none;\n  font-size: 0.9rem;\n  font-weight: 600;\n  padding: 0.35rem 0.7rem;\n  border-radius: 0.5rem;\n  transition: color 0.2s ease, background-color 0.2s ease;\n}\n\n.nav-link-calendario:hover {\n  color: var(--tc-text);\n  background: var(--tc-surface-2);\n}\n\n.nav-link-calendario.active {\n  color: var(--tc-primary);\n  background: color-mix(in srgb, var(--tc-primary) 14%, transparent);\n}\n"],
-  "mappings": ";AAAA,CAAC;AACC,SAAO,IAAI;AACX,mBAAiB;AACjB,aAAW;AACX,eAAa;AACb,WAAS,QAAQ;AACjB,iBAAe;AACf,cAAY,MAAM,KAAK,IAAI,EAAE,iBAAiB,KAAK;AACrD;AAEA,CAVC,mBAUmB;AAClB,SAAO,IAAI;AACX,cAAY,IAAI;AAClB;AAEA,CAfC,mBAemB,CAAC;AACnB,SAAO,IAAI;AACX,cAAY,UAAU,GAAG,IAAI,EAAE,IAAI,cAAc,GAAG,EAAE;AACxD;",
-  "names": []
-}
