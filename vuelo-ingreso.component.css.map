@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["src/app/features/vuelo-ingreso/vuelo-ingreso.component.css"],
+  "sourcesContent": [":host {\n  display: block;\n}\n"],
+  "mappings": ";AAAA;AACE,WAAS;AACX;",
+  "names": []
+}
