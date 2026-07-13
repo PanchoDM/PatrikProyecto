@@ -1,0 +1,125 @@
+<div class="container-fluid py-4">
+  <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
+    <div>
+      <h1 class="h3 mb-1">Torre de Control</h1>
+      <div class="d-flex align-items-center gap-2 text-body-secondary small">
+        <span class="conn-dot" [class.conn-on]="connected()"></span>
+        {{ connected() ? 'Tiempo real conectado' : 'Conectando...' }}
+      </div>
+    </div>
+
+    <div class="d-flex align-items-center gap-3">
+      <div class="legend d-none d-md-flex">
+        <span class="legend-item"><i class="dot dot-ok"></i>A tiempo</span>
+        <span class="legend-item"><i class="dot dot-warning"></i>Proximo a vencer</span>
+        <span class="legend-item"><i class="dot dot-critical"></i>Critico</span>
+        <span class="legend-item"><i class="dot dot-expired"></i>Vencido</span>
+      </div>
+      <a routerLink="/nuevo-vuelo" class="btn btn-primary btn-action">
+        <i class="bi bi-plus-lg me-2"></i>Nuevo vuelo
+      </a>
+    </div>
+  </div>
+
+  <!-- Top Metrics -->
+  <div class="row g-3 mb-4">
+    <div class="col-6 col-lg-3">
+      <div class="metric-card fade-in">
+        <div class="metric-icon"><i class="bi bi-calendar-check"></i></div>
+        <div class="metric-value">{{ flightsHoy() }}</div>
+        <div class="metric-label">Vuelos Hoy</div>
+      </div>
+    </div>
+    <div class="col-6 col-lg-3">
+      <div class="metric-card fade-in">
+        <div class="metric-icon"><i class="bi bi-arrow-repeat"></i></div>
+        <div class="metric-value">{{ liveStats().enProceso }}</div>
+        <div class="metric-label">En Proceso</div>
+      </div>
+    </div>
+    <div class="col-6 col-lg-3">
+      <div class="metric-card fade-in" [class.metric-alert]="liveStats().criticos > 0">
+        <div class="metric-icon"><i class="bi bi-exclamation-triangle-fill"></i></div>
+        <div class="metric-value">{{ liveStats().criticos }}</div>
+        <div class="metric-label">Criticos</div>
+      </div>
+    </div>
+    <div class="col-6 col-lg-3">
+      <div class="metric-card fade-in">
+        <div class="metric-icon"><i class="bi bi-speedometer2"></i></div>
+        <div class="metric-value">{{ liveStats().eficiencia }}%</div>
+        <div class="metric-label">Eficiencia</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sincronizacion desde Google Sheets -->
+  <div class="card fade-in sync-panel mb-4">
+    <div class="d-flex flex-wrap align-items-end gap-3">
+      <div class="flex-grow-1">
+        <label for="csvUrl" class="form-label small fw-semibold mb-1">
+          <i class="bi bi-filetype-csv me-1"></i>URL publica CSV de Google Sheets
+        </label>
+        <input
+          id="csvUrl"
+          type="url"
+          class="form-control"
+          placeholder="https://docs.google.com/spreadsheets/d/.../pub?output=csv"
+          [ngModel]="syncUrl()"
+          (ngModelChange)="syncUrl.set($event)"
+          [disabled]="syncing()"
+        />
+      </div>
+      <button
+        type="button"
+        class="btn btn-primary btn-action"
+        [disabled]="!syncUrl().trim() || syncing()"
+        (click)="syncFromSheet()"
+      >
+        @if (syncing()) {
+          <span class="spinner-border spinner-border-sm me-2"></span>
+        } @else {
+          <i class="bi bi-cloud-arrow-down me-2"></i>
+        }
+        Sincronizar Vuelos
+      </button>
+    </div>
+  </div>
+
+  @if (loading()) {
+    <div class="text-center text-body-secondary py-5">
+      <div class="spinner-border" role="status"></div>
+      <p class="mt-3">Cargando vuelos activos...</p>
+    </div>
+  } @else if (flights().length === 0) {
+    <div class="empty-state text-center py-5">
+      <i class="bi bi-airplane display-4 text-body-secondary"></i>
+      <p class="mt-3 text-body-secondary">No hay vuelos activos en este momento.</p>
+      <a routerLink="/nuevo-vuelo" class="btn btn-outline-primary btn-action mt-2">Registrar vuelo</a>
+    </div>
+  } @else {
+    <div class="row g-3">
+      @for (flight of flights(); track flight.id) {
+        <div class="col-12 col-sm-6 col-lg-4 col-xxl-3">
+          <app-flight-card [flight]="flight" />
+        </div>
+      }
+    </div>
+  }
+</div>
+
+<!-- Toast de resultado de sincronizacion -->
+<div class="toast-host">
+  @if (toast(); as t) {
+    <div class="toast show fade-in" [class.text-bg-success]="t.type === 'success'" [class.text-bg-danger]="t.type === 'error'">
+      <div class="d-flex align-items-start gap-2 p-3">
+        <i class="bi fs-5" [class.bi-check-circle-fill]="t.type === 'success'" [class.bi-x-circle-fill]="t.type === 'error'"></i>
+        <div class="flex-grow-1">
+          <strong class="d-block mb-1">{{ t.type === 'success' ? 'Sincronizacion completa' : 'Error de sincronizacion' }}</strong>
+          <span class="small">{{ t.message }}</span>
+        </div>
+        <button type="button" class="btn-close btn-close-white" (click)="dismissToast()"></button>
+      </div>
+    </div>
+  }
+</div>

@@ -1,0 +1,86 @@
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+}
+
+.calendar-header {
+  margin-bottom: 6px;
+}
+
+.calendar-weekday {
+  text-align: center;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--tc-muted);
+  padding-bottom: 4px;
+}
+
+.calendar-grid + .calendar-grid {
+  margin-top: 6px;
+}
+
+.calendar-cell {
+  aspect-ratio: 1 / 1;
+  border: 1px solid var(--tc-border);
+  border-radius: 0.6rem;
+  background: var(--tc-surface-2);
+  color: var(--tc-text);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  padding: 0;
+  cursor: pointer;
+  transition: border-color 0.2s ease, background-color 0.2s ease, transform 0.15s ease;
+}
+
+.calendar-cell:hover {
+  border-color: color-mix(in srgb, var(--tc-primary) 45%, var(--tc-border));
+  transform: translateY(-1px);
+}
+
+.calendar-cell.is-out {
+  opacity: 0.35;
+}
+
+.calendar-cell.is-today {
+  border-color: var(--tc-primary);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--tc-primary) 35%, transparent);
+}
+
+.calendar-cell.is-selected {
+  background: color-mix(in srgb, var(--tc-primary) 22%, var(--tc-surface-2));
+  border-color: var(--tc-primary);
+}
+
+.cell-day {
+  font-size: 0.92rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.cell-dot {
+  min-width: 1.15rem;
+  height: 1.15rem;
+  padding: 0 0.3rem;
+  border-radius: 999px;
+  background: var(--tc-primary);
+  color: var(--tc-primary-contrast);
+  font-size: 0.62rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+@media (max-width: 420px) {
+  .cell-day {
+    font-size: 0.8rem;
+  }
+}

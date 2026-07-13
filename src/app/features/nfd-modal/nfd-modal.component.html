@@ -1,0 +1,78 @@
+<div #modalRoot class="modal fade" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content fade-in">
+      <div class="modal-header">
+        <h5 class="modal-title">
+          <i class="bi bi-clipboard-check me-2"></i>Cuestionario NFD &mdash; Vuelo {{ flightNumber() }}
+        </h5>
+      </div>
+
+      <div class="modal-body">
+        <p class="text-body-secondary small mb-4">
+          Responda ambas preguntas para continuar. Si responde "Si" a cualquiera, se activara el
+          temporizador de Tarja (15 minutos).
+        </p>
+
+        <div class="mb-4">
+          <label class="form-label fw-semibold">¿Cuenta con Anticipado?</label>
+          <div class="d-flex gap-2">
+            <button
+              type="button"
+              class="btn btn-action flex-fill"
+              [class.btn-success]="anticipado() === true"
+              [class.btn-outline-success]="anticipado() !== true"
+              (click)="setAnticipado(true)"
+            >
+              Si
+            </button>
+            <button
+              type="button"
+              class="btn btn-action flex-fill"
+              [class.btn-secondary]="anticipado() === false"
+              [class.btn-outline-secondary]="anticipado() !== false"
+              (click)="setAnticipado(false)"
+            >
+              No
+            </button>
+          </div>
+        </div>
+
+        <div class="mb-2">
+          <label class="form-label fw-semibold">¿Cuenta con Correos?</label>
+          <div class="d-flex gap-2">
+            <button
+              type="button"
+              class="btn btn-action flex-fill"
+              [class.btn-success]="correos() === true"
+              [class.btn-outline-success]="correos() !== true"
+              (click)="setCorreos(true)"
+            >
+              Si
+            </button>
+            <button
+              type="button"
+              class="btn btn-action flex-fill"
+              [class.btn-secondary]="correos() === false"
+              [class.btn-outline-secondary]="correos() !== false"
+              (click)="setCorreos(false)"
+            >
+              No
+            </button>
+          </div>
+        </div>
+
+        @if (incomplete()) {
+          <div class="alert alert-warning py-2 mt-3 mb-0 small">
+            Debe responder ambas preguntas antes de continuar.
+          </div>
+        }
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary btn-action w-100" (click)="confirm()">
+          Completar NFD
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

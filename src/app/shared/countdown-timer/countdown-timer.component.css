@@ -1,0 +1,126 @@
+:host {
+  display: block;
+}
+
+.countdown {
+  border-radius: 0.75rem;
+  padding: 0.75rem 1rem;
+  background: var(--tc-surface-2);
+  border: 1px solid var(--tc-border);
+  backdrop-filter: blur(var(--tc-glass-blur, 0));
+  -webkit-backdrop-filter: blur(var(--tc-glass-blur, 0));
+  transition: background-color 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease;
+}
+
+.countdown-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.25rem;
+}
+
+.countdown-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--tc-muted);
+}
+
+.badge-live {
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 0.1rem 0.45rem;
+  border-radius: 999px;
+  background: currentColor;
+  color: #fff;
+  letter-spacing: 0.04em;
+}
+
+.countdown-value {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum' 1;
+  font-size: 1.9rem;
+  font-weight: 700;
+  line-height: 1.1;
+  transition: color 0.3s ease, transform 0.15s ease;
+  will-change: transform;
+}
+
+.countdown-value.is-overtime {
+  animation: overtime-pop 0.4s ease;
+}
+
+@keyframes overtime-pop {
+  0% { transform: scale(1); }
+  40% { transform: scale(1.08); }
+  100% { transform: scale(1); }
+}
+
+.countdown-track {
+  margin-top: 0.5rem;
+  height: 5px;
+  border-radius: 999px;
+  background: var(--tc-border);
+  overflow: hidden;
+}
+
+.countdown-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: currentColor;
+  transition: width 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Niveles de severidad: verde / amarillo / rojo / rojo parpadeante */
+.timer-ok {
+  color: var(--tc-ok);
+}
+.timer-ok .countdown-value {
+  color: var(--tc-ok);
+}
+
+.timer-warning {
+  color: var(--tc-warning);
+}
+.timer-warning .countdown-value {
+  color: var(--tc-warning);
+}
+
+.timer-critical {
+  color: var(--tc-critical);
+}
+.timer-critical .countdown-value {
+  color: var(--tc-critical);
+}
+.timer-critical {
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--tc-critical) 40%, transparent);
+}
+
+.timer-expired {
+  color: var(--tc-critical);
+}
+.timer-expired .countdown-value {
+  color: var(--tc-critical);
+}
+.timer-expired {
+  animation: blink-bg 1s infinite;
+}
+
+@keyframes blink-bg {
+  0%, 100% {
+    background: var(--tc-surface-2);
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--tc-critical) 55%, transparent);
+  }
+  50% {
+    background: color-mix(in srgb, var(--tc-critical) 16%, var(--tc-surface-2));
+    box-shadow: 0 0 0 1px var(--tc-critical);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .timer-expired,
+  .countdown-value.is-overtime {
+    animation: none;
+  }
+}

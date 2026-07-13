@@ -1,0 +1,242 @@
+/* ============================================================================
+   Torre de Control - Design tokens
+   Modo oscuro: estetica "Premium Dark Mode" con paneles de vidrio esmerilado
+   (glassmorphism) sobre fondo #121212 y acentos dorados. Los colores de
+   severidad (verde/amarillo/rojo) se mantienen para no romper la semantica
+   de los temporizadores.
+   ============================================================================ */
+
+:root {
+  --tc-bg: #121212;
+  --tc-bg-glow: #1c1a14;
+  --tc-surface: rgba(255, 255, 255, 0.05);
+  --tc-surface-2: rgba(255, 255, 255, 0.08);
+  --tc-border: rgba(255, 255, 255, 0.10);
+  --tc-text: #f2efe6;
+  --tc-muted: #a8a196;
+
+  --tc-glass-blur: 18px;
+
+  --tc-primary: #d4af37;
+  --tc-primary-2: #f0d878;
+  --tc-primary-contrast: #1a1a1a;
+
+  --tc-ok: #22c55e;
+  --tc-warning: #eab308;
+  --tc-critical: #ef4444;
+
+  --bs-body-bg: var(--tc-bg);
+  --bs-body-color: var(--tc-text);
+
+  color-scheme: dark;
+}
+
+:root[data-theme='light'] {
+  --tc-bg: #eef1f8;
+  --tc-bg-glow: #ffffff;
+  --tc-surface: #ffffff;
+  --tc-surface-2: #f4f6fb;
+  --tc-border: #d7deec;
+  --tc-text: #131a2c;
+  --tc-muted: #5b6678;
+
+  --tc-primary: #2563eb;
+  --tc-primary-2: #3b82f6;
+  --tc-primary-contrast: #ffffff;
+
+  --tc-ok: #16a34a;
+  --tc-warning: #b45309;
+  --tc-critical: #dc2626;
+
+  color-scheme: light;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  background: radial-gradient(circle at top, var(--tc-bg-glow) 0%, var(--tc-bg) 55%) fixed;
+  color: var(--tc-text);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+a {
+  color: var(--tc-primary-2);
+}
+
+.card,
+.modal-content {
+  background: var(--tc-surface);
+  border: 1px solid var(--tc-border);
+  color: var(--tc-text);
+  backdrop-filter: blur(var(--tc-glass-blur));
+  -webkit-backdrop-filter: blur(var(--tc-glass-blur));
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+}
+
+.list-group-item {
+  background: var(--tc-surface-2);
+  border-color: var(--tc-border);
+  color: var(--tc-text);
+}
+
+.form-control,
+.form-select {
+  background-color: var(--tc-surface-2);
+  border-color: var(--tc-border);
+  color: var(--tc-text);
+}
+
+.form-control:focus,
+.form-select:focus {
+  background-color: var(--tc-surface-2);
+  color: var(--tc-text);
+  border-color: var(--tc-primary);
+  box-shadow: 0 0 0 0.2rem color-mix(in srgb, var(--tc-primary) 25%, transparent);
+}
+
+.btn-action {
+  font-weight: 600;
+  padding: 0.85rem 1.25rem;
+  border-radius: 0.75rem;
+  font-size: 1.05rem;
+  transition: transform 0.12s ease, box-shadow 0.2s ease, filter 0.2s ease;
+}
+
+.btn-action:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.05);
+}
+
+.btn-action:active {
+  transform: translateY(0);
+}
+
+/* Bootstrap 5.3 resuelve .btn-primary con variables definidas en su propia
+   regla (--bs-btn-bg, etc.), no heredan de --bs-primary global. Se
+   sobreescriben aqui para lograr el acento dorado premium en modo oscuro
+   (y mantener el azul original en modo claro via --tc-primary-contrast). */
+.btn-primary {
+  --bs-btn-color: var(--tc-primary-contrast);
+  --bs-btn-bg: var(--tc-primary);
+  --bs-btn-border-color: var(--tc-primary);
+  --bs-btn-hover-color: var(--tc-primary-contrast);
+  --bs-btn-hover-bg: var(--tc-primary-2);
+  --bs-btn-hover-border-color: var(--tc-primary-2);
+  --bs-btn-active-color: var(--tc-primary-contrast);
+  --bs-btn-active-bg: var(--tc-primary-2);
+  --bs-btn-active-border-color: var(--tc-primary-2);
+  --bs-btn-disabled-color: var(--tc-primary-contrast);
+  --bs-btn-disabled-bg: var(--tc-primary);
+  --bs-btn-disabled-border-color: var(--tc-primary);
+  --bs-btn-focus-box-shadow: 0 0 0 0.2rem color-mix(in srgb, var(--tc-primary) 35%, transparent);
+}
+
+.btn-outline-primary {
+  --bs-btn-color: var(--tc-primary);
+  --bs-btn-border-color: var(--tc-primary);
+  --bs-btn-hover-color: var(--tc-primary-contrast);
+  --bs-btn-hover-bg: var(--tc-primary);
+  --bs-btn-hover-border-color: var(--tc-primary);
+  --bs-btn-active-color: var(--tc-primary-contrast);
+  --bs-btn-active-bg: var(--tc-primary);
+  --bs-btn-active-border-color: var(--tc-primary);
+}
+
+.text-primary {
+  color: var(--tc-primary) !important;
+}
+
+.navbar-tc {
+  background: color-mix(in srgb, var(--tc-surface) 92%, transparent);
+  border-bottom: 1px solid var(--tc-border);
+  backdrop-filter: blur(10px);
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--tc-border);
+  border-radius: 999px;
+}
+
+.flatpickr-calendar {
+  background: var(--tc-surface);
+  border: 1px solid var(--tc-border);
+  color: var(--tc-text);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+}
+.flatpickr-calendar.arrowTop::before,
+.flatpickr-calendar.arrowTop::after {
+  border-bottom-color: var(--tc-border);
+}
+.flatpickr-months .flatpickr-month,
+.flatpickr-current-month,
+.flatpickr-weekday {
+  color: var(--tc-text);
+  fill: var(--tc-text);
+}
+.flatpickr-current-month input.cur-year,
+.flatpickr-monthDropdown-months {
+  color: var(--tc-text);
+  background: transparent;
+}
+.flatpickr-day {
+  color: var(--tc-text);
+}
+.flatpickr-day.flatpickr-disabled,
+.flatpickr-day.prevMonthDay,
+.flatpickr-day.nextMonthDay {
+  color: var(--tc-muted);
+}
+.flatpickr-day:hover {
+  background: var(--tc-surface-2);
+  border-color: var(--tc-surface-2);
+}
+.flatpickr-day.selected,
+.flatpickr-day.selected:hover {
+  background: var(--tc-primary);
+  border-color: var(--tc-primary);
+  color: #fff;
+}
+.flatpickr-day.today {
+  border-color: var(--tc-primary-2);
+}
+.flatpickr-time input,
+.flatpickr-time .flatpickr-am-pm {
+  color: var(--tc-text);
+}
+.flatpickr-time {
+  border-top: 1px solid var(--tc-border);
+}
+.numInputWrapper span.arrowUp:after {
+  border-bottom-color: var(--tc-muted);
+}
+.numInputWrapper span.arrowDown:after {
+  border-top-color: var(--tc-muted);
+}
+
+/* Transiciones de entrada suaves para tarjetas y modales (fluidez UX) */
+.fade-in {
+  animation: fade-in 0.35s ease both;
+}
+
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fade-in {
+    animation: none;
+  }
+}

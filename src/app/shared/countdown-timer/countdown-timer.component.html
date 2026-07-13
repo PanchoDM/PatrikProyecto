@@ -1,0 +1,18 @@
+<div class="countdown" [class]="levelClass()">
+  <div class="countdown-header">
+    <span class="countdown-label">{{ timer().label }}</span>
+    @if (timer().level === 'VENCIDO') {
+      <span class="badge-live">VENCIDO</span>
+    } @else if (timer().level === 'CRITICO') {
+      <span class="badge-live">CRITICO</span>
+    }
+  </div>
+
+  <div class="countdown-value" [class.is-overtime]="isOvertime()">
+    {{ display() }}
+  </div>
+
+  <div class="countdown-track">
+    <div class="countdown-fill" [style.width.%]="progressPercent()"></div>
+  </div>
+</div>

@@ -1,0 +1,124 @@
+<div class="container py-4" style="max-width: 560px;">
+  <a routerLink="/torre-control" class="text-body-secondary small d-inline-flex align-items-center mb-3">
+    <i class="bi bi-arrow-left me-1"></i>Volver a Torre de Control
+  </a>
+
+  <div class="card fade-in p-4 p-md-5">
+    <h1 class="h4 mb-1">Registrar vuelo</h1>
+    <p class="text-body-secondary small mb-4">
+      Ingrese el numero de vuelo (debe iniciar con <strong>LA</strong> o <strong>UC</strong>) para
+      habilitar el registro de la Hora Estimada de Llegada (ETA).
+    </p>
+
+    <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+      <div class="mb-4">
+        <label for="flightNumber" class="form-label fw-semibold">Numero de vuelo</label>
+        <input
+          id="flightNumber"
+          type="text"
+          class="form-control form-control-lg text-uppercase"
+          placeholder="Ej. LA2045"
+          formControlName="flightNumber"
+          [class.is-invalid]="form.controls.flightNumber.touched && form.controls.flightNumber.invalid"
+          [class.is-valid]="prefixValid()"
+          autocomplete="off"
+        />
+        @if (form.controls.flightNumber.touched && form.controls.flightNumber.invalid) {
+          <div class="invalid-feedback">Debe iniciar con LA o UC seguido de 2 a 4 digitos.</div>
+        }
+        @if (prefixValid()) {
+          <div class="valid-feedback">Prefijo valido. Ya puede ingresar el ETA.</div>
+        }
+      </div>
+
+      <div class="mb-4">
+        <label for="eta" class="form-label fw-semibold">Hora Estimada de Llegada (ETA)</label>
+        <input
+          id="eta"
+          type="text"
+          readonly
+          autocomplete="off"
+          placeholder="Seleccione fecha y hora"
+          class="form-control form-control-lg"
+          formControlName="eta"
+          appFlatpickrDatetime
+          [class.is-invalid]="form.controls.eta.touched && form.controls.eta.invalid && !form.controls.eta.disabled"
+        />
+        @if (!prefixValid()) {
+          <div class="form-text">Se habilita al validar el numero de vuelo.</div>
+        }
+      </div>
+
+      @if (errorMessage()) {
+        <div class="alert alert-danger py-2 small">{{ errorMessage() }}</div>
+      }
+
+      <div class="d-flex gap-2">
+        <button
+          type="button"
+          class="btn btn-outline-secondary btn-action flex-fill"
+          [disabled]="submitting()"
+          (click)="cancel()"
+        >
+          Cancelar
+        </button>
+        <button type="submit" class="btn btn-primary btn-action flex-fill" [disabled]="form.invalid || submitting()">
+          @if (submitting()) {
+            <span class="spinner-border spinner-border-sm me-2"></span>
+          }
+          Registrar vuelo
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <div class="card fade-in p-4 p-md-5 mt-4">
+    <h2 class="h5 mb-1">Importar vuelos desde Excel</h2>
+    <p class="text-body-secondary small mb-3">
+      El archivo (.xlsx) debe tener una fila de encabezados con una columna de numero de vuelo
+      (ej. "Numero de vuelo") y una columna de ETA (ej. "ETA") con la fecha y hora estimada de llegada.
+    </p>
+
+    <input
+      type="file"
+      accept=".xlsx"
+      class="form-control mb-3"
+      [disabled]="importing()"
+      (change)="onFileSelected($event)"
+    />
+
+    @if (importing() && !importResults()) {
+      <div class="d-flex align-items-center gap-2 text-body-secondary small mb-3">
+        <span class="spinner-border spinner-border-sm"></span>
+        Leyendo archivo...
+      </div>
+    }
+
+    @if (importError()) {
+      <div class="alert alert-danger py-2 small">{{ importError() }}</div>
+    }
+
+    @if (importResults(); as results) {
+      <ul class="list-group">
+        @for (result of results; track result.flightNumber + '-' + $index) {
+          <li class="list-group-item d-flex justify-content-between align-items-center gap-2">
+            <span>{{ result.flightNumber }}</span>
+            @switch (result.status) {
+              @case ('pending') {
+                <span class="spinner-border spinner-border-sm"></span>
+              }
+              @case ('ok') {
+                <span class="badge text-bg-success">Registrado</span>
+              }
+              @case ('error') {
+                <span class="badge text-bg-danger text-truncate" style="max-width: 220px;" [title]="result.message">
+                  {{ result.message || 'Error' }}
+                </span>
+              }
+            }
+          </li>
+        }
+      </ul>
+    }
+  </div>
+</div>

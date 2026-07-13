@@ -1,0 +1,88 @@
+<div class="flight-card fade-in" [class.is-terminal]="flight().status === 'COMPLETADO'">
+  <div class="flight-card-header">
+    <div class="flight-id">
+      <span class="flight-number">{{ flight().flightNumber }}</span>
+      <span class="prefix-badge" [class.prefix-la]="flight().prefix === 'LA'" [class.prefix-uc]="flight().prefix === 'UC'">
+        {{ flight().prefix }}
+      </span>
+      @if (!flight().conCarga) {
+        <span class="carga-badge" title="Flujo simplificado: termina al registrar el ATA">
+          <i class="bi bi-box me-1"></i>Sin carga
+        </span>
+      }
+    </div>
+    <span class="status-badge" [attr.data-status]="flight().status">{{ statusLabels[flight().status] }}</span>
+  </div>
+
+  @if (flight().origen) {
+    <div class="flight-origen"><i class="bi bi-geo-alt me-1"></i>{{ flight().origen }}</div>
+  }
+
+  @if (flight().timers.length > 0) {
+    <div class="timers-grid">
+      @for (timer of flight().timers; track timer.type) {
+        <app-countdown-timer [timer]="timer" />
+      }
+    </div>
+  } @else {
+    <p class="text-body-secondary small mb-0 py-2">Sin temporizadores activos.</p>
+  }
+
+  @if (errorMessage()) {
+    <div class="alert alert-danger py-2 small mt-2 mb-0">{{ errorMessage() }}</div>
+  }
+
+  <div class="flight-card-actions">
+    @switch (flight().status) {
+      @case ('ESPERANDO_ATA') {
+        <div class="ata-time-picker">
+          <label [for]="'ata-time-' + flight().id" class="form-label small fw-semibold mb-1">
+            Hora real de arribo (ATA)
+          </label>
+          <div class="d-flex gap-2">
+            <input
+              [id]="'ata-time-' + flight().id"
+              type="time"
+              class="form-control form-control-lg"
+              [ngModel]="ataTime()"
+              (ngModelChange)="ataTime.set($event)"
+              [disabled]="busy()"
+            />
+            <button
+              type="button"
+              class="btn btn-outline-secondary"
+              title="Usar la hora actual"
+              [disabled]="busy()"
+              (click)="resetAtaTimeToNow()"
+            >
+              <i class="bi bi-clock-history"></i>
+            </button>
+          </div>
+        </div>
+        <button type="button" class="btn btn-primary btn-action w-100" [disabled]="busy()" (click)="registerAta()">
+          <i class="bi bi-check2-circle me-2"></i>Registrar ATA
+        </button>
+      }
+      @case ('EN_DESCARGA') {
+        <button type="button" class="btn btn-primary btn-action w-100" [disabled]="busy()" (click)="confirmDescarga()">
+          <i class="bi bi-box-seam me-2"></i>Confirmar Termino de Descarga
+        </button>
+      }
+      @case ('ESPERANDO_NFD') {
+        <button type="button" class="btn btn-primary btn-action w-100" (click)="openNfdModal()">
+          <i class="bi bi-clipboard-check me-2"></i>Modal NFD
+        </button>
+      }
+      @case ('EN_TARJA') {
+        <button type="button" class="btn btn-primary btn-action w-100" [disabled]="busy()" (click)="completeTarja()">
+          <i class="bi bi-file-earmark-check me-2"></i>Realizar la Tarja
+        </button>
+      }
+      @case ('COMPLETADO') {
+        <span class="text-success small"><i class="bi bi-check-circle-fill me-1"></i>Proceso completado</span>
+      }
+    }
+  </div>
+</div>
+
+<app-nfd-modal [flightNumber]="flight().flightNumber" (answered)="submitNfd($event)" />

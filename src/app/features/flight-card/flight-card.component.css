@@ -1,0 +1,117 @@
+:host {
+  display: block;
+}
+
+.flight-card {
+  background: var(--tc-surface);
+  border: 1px solid var(--tc-border);
+  border-radius: 1rem;
+  padding: 1.1rem;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  backdrop-filter: blur(var(--tc-glass-blur, 0));
+  -webkit-backdrop-filter: blur(var(--tc-glass-blur, 0));
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  transition: border-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+}
+
+.flight-card:hover {
+  border-color: color-mix(in srgb, var(--tc-primary) 45%, var(--tc-border));
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.28);
+}
+
+.flight-origen {
+  font-size: 0.72rem;
+  color: var(--tc-muted);
+  margin-top: -0.4rem;
+}
+
+.flight-card.is-terminal {
+  opacity: 0.7;
+}
+
+.flight-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.flight-id {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.flight-number {
+  font-size: 1.35rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  font-variant-numeric: tabular-nums;
+}
+
+.prefix-badge {
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 0.15rem 0.45rem;
+  border-radius: 0.4rem;
+}
+
+.carga-badge {
+  font-size: 0.68rem;
+  font-weight: 600;
+  padding: 0.15rem 0.45rem;
+  border-radius: 0.4rem;
+  background: var(--tc-surface-2);
+  color: var(--tc-muted);
+  white-space: nowrap;
+}
+
+.prefix-la {
+  background: color-mix(in srgb, var(--tc-primary) 20%, transparent);
+  color: var(--tc-primary-2);
+}
+
+.prefix-uc {
+  background: color-mix(in srgb, #a855f7 20%, transparent);
+  color: #c4b5fd;
+}
+
+.status-badge {
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 0.3rem 0.6rem;
+  border-radius: 999px;
+  background: var(--tc-surface-2);
+  color: var(--tc-muted);
+  white-space: nowrap;
+}
+
+.status-badge[data-status='COMPLETADO'] {
+  color: var(--tc-ok);
+}
+
+.status-badge[data-status='ESPERANDO_NFD'] {
+  color: var(--tc-warning);
+}
+
+.timers-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 0.6rem;
+}
+
+.flight-card-actions {
+  margin-top: auto;
+  padding-top: 0.25rem;
+}
+
+.ata-time-picker {
+  margin-bottom: 0.6rem;
+}
+
+.ata-time-picker input[type='time'] {
+  font-variant-numeric: tabular-nums;
+}

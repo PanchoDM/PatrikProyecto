@@ -1,0 +1,35 @@
+<nav class="navbar navbar-tc navbar-expand sticky-top py-3">
+  <div class="container-fluid">
+    <a class="navbar-brand fw-bold d-flex align-items-center gap-2" routerLink="/torre-control">
+      <i class="bi bi-broadcast text-primary"></i>
+      KPI
+    </a>
+
+    <div class="d-flex align-items-center gap-3">
+      @if (auth.session()) {
+        <a routerLink="/calendario" routerLinkActive="active" class="nav-link-calendario d-none d-md-inline-flex align-items-center gap-1">
+          <i class="bi bi-calendar3"></i>Calendario
+        </a>
+      }
+
+      <button
+        type="button"
+        class="btn btn-outline-secondary btn-sm theme-toggle"
+        (click)="theme.toggle()"
+        [attr.aria-label]="theme.isDark() ? 'Cambiar a tema claro' : 'Cambiar a tema oscuro'"
+        title="Cambiar tema"
+      >
+        <i class="bi" [class.bi-sun-fill]="theme.isDark()" [class.bi-moon-stars-fill]="!theme.isDark()"></i>
+      </button>
+
+      @if (auth.session()) {
+        <span class="text-body-secondary small d-none d-sm-inline">{{ auth.session()?.user?.email }}</span>
+        <button type="button" class="btn btn-outline-secondary btn-sm" (click)="logout()">
+          <i class="bi bi-box-arrow-right me-1"></i>Salir
+        </button>
+      }
+    </div>
+  </div>
+</nav>
+
+<router-outlet />
