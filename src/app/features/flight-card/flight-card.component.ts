@@ -1,7 +1,7 @@
-import { Component, effect, inject, input, signal, viewChild } from '@angular/core';
+import { Component, computed, effect, inject, input, signal, viewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { FlightService } from '../../core/services/flight.service';
-import { FlightState, STATUS_LABELS } from '../../core/models/flight.model';
+import { FlightState, STATUS_LABELS, isFlightUrgent } from '../../core/models/flight.model';
 import { CountdownTimerComponent } from '../../shared/countdown-timer/countdown-timer.component';
 import { NfdAnswers, NfdModalComponent } from '../nfd-modal/nfd-modal.component';
 
@@ -17,6 +17,7 @@ export class FlightCardComponent {
 
   readonly flight = input.required<FlightState>();
   readonly statusLabels = STATUS_LABELS;
+  readonly isUrgent = computed(() => isFlightUrgent(this.flight()));
 
   private readonly nfdModal = viewChild(NfdModalComponent);
   private lastStatus: string | null = null;

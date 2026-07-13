@@ -7,7 +7,7 @@ import { FlightService } from '../../core/services/flight.service';
 import { WebSocketService } from '../../core/services/websocket.service';
 import { PushNotificationService } from '../../core/services/push-notification.service';
 import { AuthService } from '../../core/services/auth.service';
-import { FlightState } from '../../core/models/flight.model';
+import { FlightState, isFlightUrgent } from '../../core/models/flight.model';
 import { FlightCardComponent } from '../flight-card/flight-card.component';
 
 interface ToastMessage {
@@ -30,7 +30,14 @@ export class TorreControlComponent implements OnInit, OnDestroy {
 
   private readonly flightsMap = signal<Map<string, FlightState>>(new Map());
   readonly flights = computed(() =>
-    Array.from(this.flightsMap().values()).sort((a, b) => a.flightNumber.localeCompare(b.flightNumber)),
+    Array.from(this.flightsMap().values()).sort((a, b) => {
+      const urgentA = isFlightUrgent(a);
+      const urgentB = isFlightUrgent(b);
+      if (urgentA !== urgentB) {
+        return urgentA ? -1 : 1;
+      }
+      return a.flightNumber.localeCompare(b.flightNumber);
+    }),
   );
 
   readonly loading = signal(true);

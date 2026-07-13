@@ -67,6 +67,14 @@ export interface SyncResult {
 
 export const FLIGHT_NUMBER_PATTERN = /^(LA|UC)\d{2,4}$/;
 
+/** Umbral (en segundos) a partir del cual un cronometro se considera urgente. */
+export const URGENT_THRESHOLD_SECONDS = 5 * 60;
+
+/** True si el vuelo tiene algun cronometro activo a 5 minutos o menos (incluye vencidos). */
+export function isFlightUrgent(flight: FlightState): boolean {
+  return flight.timers.some((t) => t.active && t.remainingSeconds <= URGENT_THRESHOLD_SECONDS);
+}
+
 export const STATUS_LABELS: Record<FlightStatus, string> = {
   ESPERANDO_ETA: 'Esperando ETA',
   ESPERANDO_ATA: 'Esperando ATA',

@@ -1,4 +1,8 @@
-<div class="flight-card fade-in" [class.is-terminal]="flight().status === 'COMPLETADO'">
+<div
+  class="flight-card fade-in"
+  [class.is-terminal]="flight().status === 'COMPLETADO'"
+  [class.is-urgent]="isUrgent()"
+>
   <div class="flight-card-header">
     <div class="flight-id">
       <span class="flight-number">{{ flight().flightNumber }}</span>
@@ -8,6 +12,11 @@
       @if (!flight().conCarga) {
         <span class="carga-badge" title="Flujo simplificado: termina al registrar el ATA">
           <i class="bi bi-box me-1"></i>Sin carga
+        </span>
+      }
+      @if (isUrgent()) {
+        <span class="urgent-badge" title="Cronometro a 5 minutos o menos">
+          <i class="bi bi-exclamation-triangle-fill me-1"></i>Urgente
         </span>
       }
     </div>
