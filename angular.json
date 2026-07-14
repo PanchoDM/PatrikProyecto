@@ -36,6 +36,7 @@
           },
           "configurations": {
             "production": {
+              "baseHref": "/PatrikProyecto/",
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
@@ -81,6 +82,12 @@
         },
         "test": {
           "builder": "@angular/build:unit-test"
+        },
+        "deploy": {
+          "builder": "angular-cli-ghpages:deploy",
+          "options": {
+            "baseHref": "/PatrikProyecto/"
+          }
         }
       }
     }

@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, computed, inject, signal } from '@angular/core';
+import { Component, OnDestroy, OnInit, computed, effect, inject, signal } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
@@ -6,6 +6,8 @@ import { Subscription } from 'rxjs';
 import { FlightService } from '../../core/services/flight.service';
 import { WebSocketService } from '../../core/services/websocket.service';
 import { PushNotificationService } from '../../core/services/push-notification.service';
+import { CriticalAlertService } from '../../core/services/critical-alert.service';
+import { PipTimersService } from '../../core/services/pip-timers.service';
 import { AuthService } from '../../core/services/auth.service';
 import { FlightState, isFlightUrgent } from '../../core/models/flight.model';
 import { FlightCardComponent } from '../flight-card/flight-card.component';
@@ -27,6 +29,8 @@ export class TorreControlComponent implements OnInit, OnDestroy {
   private readonly ws = inject(WebSocketService);
   private readonly push = inject(PushNotificationService);
   private readonly auth = inject(AuthService);
+  readonly criticalAlert = inject(CriticalAlertService);
+  readonly pip = inject(PipTimersService);
 
   private readonly flightsMap = signal<Map<string, FlightState>>(new Map());
   readonly flights = computed(() =>
@@ -61,6 +65,17 @@ export class TorreControlComponent implements OnInit, OnDestroy {
 
   private dashboardSub?: Subscription;
 
+  constructor() {
+    // Se re-evalua cada vez que cambia el estado en vivo de los vuelos
+    // (cada tick del WebSocket, ~1s): revisa cronometros criticos para la
+    // notificacion nativa y redibuja la ventana flotante si esta abierta.
+    effect(() => {
+      const flights = this.flights();
+      this.criticalAlert.checkFlights(flights);
+      this.pip.update(flights);
+    });
+  }
+
   ngOnInit(): void {
     this.reloadFlights();
     this.refreshStats();
@@ -72,10 +87,21 @@ export class TorreControlComponent implements OnInit, OnDestroy {
     if (userId) {
       void this.push.start(userId);
     }
+    void this.criticalAlert.requestPermission();
+  }
+
+  async togglePip(): Promise<void> {
+    if (this.pip.isOpen()) {
+      this.pip.close();
+    } else {
+      await this.pip.open();
+      this.pip.update(this.flights());
+    }
   }
 
   ngOnDestroy(): void {
     this.dashboardSub?.unsubscribe();
+    this.pip.close();
     if (this.toastTimeoutId) {
       clearTimeout(this.toastTimeoutId);
     }
