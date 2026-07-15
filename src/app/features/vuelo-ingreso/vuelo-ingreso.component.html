@@ -32,6 +32,37 @@
       </div>
 
       <div class="mb-4">
+        <label class="form-label fw-semibold">Tipo de vuelo</label>
+        <div class="d-flex gap-2">
+          <button
+            type="button"
+            class="btn btn-action flex-fill"
+            [class.btn-success]="form.controls.conCarga.value === true"
+            [class.btn-outline-success]="form.controls.conCarga.value !== true"
+            [disabled]="form.controls.conCarga.disabled"
+            (click)="form.controls.conCarga.setValue(true)"
+          >
+            <i class="bi bi-box-seam me-1"></i>Con carga
+          </button>
+          <button
+            type="button"
+            class="btn btn-action flex-fill"
+            [class.btn-secondary]="form.controls.conCarga.value === false"
+            [class.btn-outline-secondary]="form.controls.conCarga.value !== false"
+            [disabled]="form.controls.conCarga.disabled"
+            (click)="form.controls.conCarga.setValue(false)"
+          >
+            <i class="bi bi-box me-1"></i>Sin carga
+          </button>
+        </div>
+        @if (form.controls.conCarga.value === false) {
+          <div class="form-text">Flujo simplificado: el proceso termina al registrar el ATA.</div>
+        } @else if (!prefixValid()) {
+          <div class="form-text">Se habilita al validar el numero de vuelo.</div>
+        }
+      </div>
+
+      <div class="mb-4">
         <label for="eta" class="form-label fw-semibold">Hora Estimada de Llegada (ETA)</label>
         <input
           id="eta"

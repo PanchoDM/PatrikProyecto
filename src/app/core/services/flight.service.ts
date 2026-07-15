@@ -31,8 +31,8 @@ export class FlightService {
     return this.http.get<FlightState>(`${this.baseUrl}/${id}`);
   }
 
-  createFlight(flightNumber: string): Observable<FlightState> {
-    return this.http.post<FlightState>(this.baseUrl, { flightNumber });
+  createFlight(flightNumber: string, conCarga: boolean = true): Observable<FlightState> {
+    return this.http.post<FlightState>(this.baseUrl, { flightNumber, conCarga });
   }
 
   setEta(id: string, eta: string): Observable<FlightState> {

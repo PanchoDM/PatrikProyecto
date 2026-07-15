@@ -55,6 +55,7 @@ export class VueloIngresoComponent {
       nonNullable: true,
       validators: [Validators.required, Validators.pattern(FLIGHT_NUMBER_PATTERN)],
     }),
+    conCarga: new FormControl<boolean>(true, { nonNullable: true }),
     eta: new FormControl<Date | null>(null, { validators: [Validators.required] }),
   });
 
@@ -72,6 +73,7 @@ export class VueloIngresoComponent {
 
   constructor() {
     this.form.controls.eta.disable();
+    this.form.controls.conCarga.disable();
     this.form.controls.flightNumber.valueChanges.subscribe((value) => {
       const upper = (value ?? '').toUpperCase();
       if (upper !== value) {
@@ -79,8 +81,10 @@ export class VueloIngresoComponent {
       }
       if (FLIGHT_NUMBER_PATTERN.test(upper.trim())) {
         this.form.controls.eta.enable({ emitEvent: false });
+        this.form.controls.conCarga.enable({ emitEvent: false });
       } else {
         this.form.controls.eta.disable({ emitEvent: false });
+        this.form.controls.conCarga.disable({ emitEvent: false });
       }
     });
   }
@@ -98,11 +102,11 @@ export class VueloIngresoComponent {
     this.submitting.set(true);
     this.errorMessage.set(null);
 
-    const { flightNumber, eta } = this.form.getRawValue();
+    const { flightNumber, conCarga, eta } = this.form.getRawValue();
     const etaIso = eta!.toISOString();
 
     this.flightService
-      .createFlight(flightNumber)
+      .createFlight(flightNumber, conCarga)
       .pipe(switchMap((created) => this.flightService.setEta(created.id, etaIso)))
       .subscribe({
         next: () => this.router.navigateByUrl('/torre-control'),
